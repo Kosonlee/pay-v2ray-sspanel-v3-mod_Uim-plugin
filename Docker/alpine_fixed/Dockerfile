@@ -11,7 +11,7 @@ COPY v2ray.zip /tmp/v2ray-linux-64.zip
 RUN /tmp/go.sh  --local /tmp/v2ray.zip --panelurl https://google.com --panelkey 55fUxDGFzH3n --nodeid 123456 \
     --downwithpanel 1 --mysqlhost https://bing.com --mysqldbname demo_dbname --mysqluser demo_user \
     --mysqlpasswd demo_dbpassword --mysqlport 3306 --speedtestrate 6 --paneltype 0 --usemysql 0 \
-    --ldns localhost
+    --ldns localhost --local /tmp/v2ray-linux-64.zip
 
 FROM alpine:latest
 
