@@ -127,6 +127,12 @@ while [[ $# > 0 ]];do
         --useip)
         USEIP="$2"
         ;;
+        --muregex)
+        MUREGEX="$2"
+        ;;
+        --musuffix)
+        MUSUFFIX="$2"
+        ;;
         *)
                 # unknown option
         ;;
@@ -437,6 +443,20 @@ installV2Ray(){
         then
                 sed -i "s|\"UseIP\"|\"${UseIP}\"|g" "/etc/v2ray/config.json"
                 colorEcho ${BLUE} "USEIP:${USEIP}"
+
+        fi
+
+        if [ ! -z "${MUREGEX}" ]
+        then
+               sed -i "s|\"%5m%id.%suffix\"|\"${MUREGEX}\"|g" "/etc/v2ray/config.json"
+                colorEcho ${BLUE} "MUREGEX:${MUREGEX}"
+
+        fi
+
+        if [ ! -z "${MUSUFFIX}" ]
+        then
+               sed -i "s|\"microsoft.com\"|\"${MUSUFFIX}\"|g" "/etc/v2ray/config.json"
+                colorEcho ${BLUE} "MUSUFFIX:${MUSUFFIX}"
 
         fi
 
