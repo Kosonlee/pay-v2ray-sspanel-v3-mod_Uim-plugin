@@ -22,6 +22,12 @@ if [ ! -z "${speedtest}" ]
     then
         sed -i "s/\"SpeedTestCheckRate\": 6/\"SpeedTestCheckRate\": ${speedtest}/g" "/etc/v2ray/config.json"
 fi
+
+if [ ! -z "${checkrate}" ]
+    then
+        sed -i "s/\"checkRate\": 60/\"checkRate\": ${checkrate}/g" "/etc/v2ray/config.json"
+fi
+
 if [ ! -z "${downWithPanel}" ]
     then
        sed -i "s/\"downWithPanel\": 1/\"downWithPanel\": ${downWithPanel}/g" "/etc/v2ray/config.json"
@@ -78,6 +84,24 @@ fi
 if [ ! -z "${NodeUserLimited}" ]
     then
         sed -i "s/\"NodeUserLimited\": 4/\"NodeUserLimited\": ${NodeUserLimited}/g" "/etc/v2ray/config.json"
+fi
+
+if [ ! -z "${UseIP}" ]
+then
+  sed -i "s|\"UseIP\"|\"${UseIP}\"|g" "/etc/v2ray/config.json"
+
+fi
+
+if [ ! -z "${MUREGEX}" ]
+then
+  sed -i "s|\"%5m%id.%suffix\"|\"${MUREGEX}\"|g" "/etc/v2ray/config.json"
+
+fi
+
+if [ ! -z "${MUSUFFIX}" ]
+then
+  sed -i "s|\"microsoft.com\"|\"${MUSUFFIX}\"|g" "/etc/v2ray/config.json"
+
 fi
 
 cat /etc/v2ray/config.json

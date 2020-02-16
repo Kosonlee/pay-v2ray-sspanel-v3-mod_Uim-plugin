@@ -2,7 +2,7 @@ version: '2'
 
 services:
   v2ray:
-    image: xxx/xxx:xxx
+    image: rico93/v2ray_v3:go_pay
     restart: always
     network_mode: "host"
     environment:
@@ -23,6 +23,8 @@ services:
       usemysql: 0
       CF_Key: "bbbbbbbbbbbbbbbbbb"
       CF_Email: "v2rayV3@test.com"
+      MUREGEX: "%5m%id.%suffix"
+      MUSUFFIX: "microsoft.com"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     logging:

@@ -116,15 +116,9 @@
     {
       "protocol": "blackhole",
       "settings": {"response": {
-        "type": "none"
+        "type": "http"
       }},
       "tag": "blocked"
-    },{
-      "protocol": "blackhole",
-      "settings": {"response": {
-        "type": "none"
-      }},
-      "tag": "blockedNodeUserLimited"
     }, {
       "protocol": "blackhole",
       "settings": {"response": {
@@ -137,6 +131,12 @@
         "type": "http"
       }},
       "tag": "blockedip"
+    },{
+      "protocol": "blackhole",
+      "settings": {"response": {
+        "type": "none"
+      }},
+      "tag": "blockedNodeUserLimited"
     }
   ],
   "policy": {
@@ -163,18 +163,18 @@
         "bittorrent"
       ],
       "type": "field"
-    },{
-      "outboundTag": "blockedNodeUserLimited",
-      "user": [
-        "userlimitedBlocked@rico.xxx"
-      ],
-      "type": "field"
     },
       {
         "inboundTag": [
           "api"
         ],
         "outboundTag": "api",
+        "type": "field"
+      },{
+        "outboundTag": "blockedNodeUserLimited",
+        "user": [
+          "userlimitedBlocked@rico.xxx"
+        ],
         "type": "field"
       }
     ],
@@ -202,7 +202,7 @@
     "go_panel_host": "bwg.com",
     "go_panel_key": "bbbbaaaaaaa",
     "cf_key": "bbbbbbbbbbbbbbbbbb",
-    "cf_email": "v2rayV3@test.com",
-    "NodeUserLimited": 4
+    "cf_email": "v2rayV3@test.com"
   }
 }
+
