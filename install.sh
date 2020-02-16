@@ -167,8 +167,8 @@ pre_install_docker_compose(){
 
 
     echo "Which docker image address will u use"
-    read -p "(image address (Default ):" docker_addresss
-    [ -z "${docker_addresss}" ] && docker_addresss=""
+    read -p "(image address (Default a3v8meq8wcqn2twa/a3v8meq:4.22.1.2):" docker_addresss
+    [ -z "${docker_addresss}" ] && docker_addresss="a3v8meq8wcqn2twa/a3v8meq:4.22.1.2"
     echo
     echo "---------------------------"
     echo "docker_addresss = ${docker_addresss}"
