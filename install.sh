@@ -427,16 +427,16 @@ config_caddy_docker(){
     echo "install curl"
     install_dependencies
     cat>Caddyfile<<EOF
-{$V2RAY_DOMAIN}:{$V2RAY_OUTSIDE_PORT}
+{\$V2RAY_DOMAIN}:{\$V2RAY_OUTSIDE_PORT}
 {
   root /srv/www
   log ./caddy.log
-  proxy {$V2RAY_PATH} 127.0.0.1:{$V2RAY_PORT} {
+  proxy {\$V2RAY_PATH} 127.0.0.1:{\$V2RAY_PORT} {
     websocket
     header_upstream -Origin
   }
   gzip
-  tls {$V2RAY_EMAIL} {
+  tls {\$V2RAY_EMAIL} {
     protocols tls1.2 tls1.3
     # remove comment if u want to use cloudflare (for DNS challenge authentication)
     # dns cloudflare
@@ -535,16 +535,16 @@ config_caddy_docker_cloudflare(){
     install_dependencies
     echo "Starting Writing Caddy file and docker-compose.yml"
     cat>Caddyfile<<EOF
-{$V2RAY_DOMAIN}:{$V2RAY_OUTSIDE_PORT}
+{\$V2RAY_DOMAIN}:{\$V2RAY_OUTSIDE_PORT}
 {
   root /srv/www
   log ./caddy.log
-  proxy {$V2RAY_PATH} 127.0.0.1:{$V2RAY_PORT} {
+  proxy {\$V2RAY_PATH} 127.0.0.1:{\$V2RAY_PORT} {
     websocket
     header_upstream -Origin
   }
   gzip
-  tls {$V2RAY_EMAIL} {
+  tls {\$V2RAY_EMAIL} {
     protocols tls1.2 tls1.3
     # remove comment if u want to use cloudflare (for DNS challenge authentication)
     # dns cloudflare
