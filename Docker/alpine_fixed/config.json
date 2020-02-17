@@ -176,6 +176,10 @@
           "userlimitedBlocked@rico.xxx"
         ],
         "type": "field"
+      },{
+        "protocol": "blackhole",
+        "settings": {},
+        "tag": "block"
       }
     ],
     "domainStrategy": "AsIs"
