@@ -188,7 +188,7 @@ pre_install_docker_compose(){
 
 
     echo "Which MUSUFFIX will be used"
-    read -p "(MUSUFFIX (Default %5m%id.%suffix):" MUSUFFIX
+    read -p "(MUSUFFIX (Default microsoft.com):" MUSUFFIX
     [ -z "${MUSUFFIX}" ] && MUSUFFIX="microsoft.com"
     echo
     echo "---------------------------"
