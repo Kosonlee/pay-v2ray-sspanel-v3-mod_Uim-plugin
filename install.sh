@@ -116,16 +116,16 @@ pre_install_docker_compose(){
     echo "v2ray_paneltype = ${v2ray_paneltype}"
     echo "---------------------------"
     echo
-    # Set ssrpanel node_id
+    # Set sspanel node_id
     echo "sspanel node_id"
-    read -p "(Default value: 0 ):" ssrpanel_node_id
-    [ -z "${ssrpanel_node_id}" ] && ssrpanel_node_id=0
+    read -p "(Default value: 0 ):" sspanel_node_id
+    [ -z "${sspanel_node_id}" ] && sspanel_node_id=0
     echo
     echo "---------------------------"
-    echo "ssrpanel_node_id = ${ssrpanel_node_id}"
+    echo "sspanel_node_id = ${sspanel_node_id}"
     echo "---------------------------"
     echo
-     # Set ssrpanel node_id
+     # Set sspanel node_id
     echo "DNS "
     read -p "(Default value: localhost ):" LDNS
     [ -z "${LDNS}" ] && LDNS="localhost"
@@ -198,22 +198,22 @@ pre_install_docker_compose(){
 
     if [ "${v2ray_usemysql}" -eq 0 ];
         then
-      # Set ssrpanel_url
+      # Set sspanel_url
     echo "Please sspanel_url"
-    read -p "(There is no default value please make sure you input the right thing):" ssrpanel_url
-    [ -z "${ssrpanel_url}" ]
+    read -p "(There is no default value please make sure you input the right thing):" sspanel_url
+    [ -z "${sspanel_url}" ]
     echo
     echo "---------------------------"
-    echo "ssrpanel_url = ${ssrpanel_url}"
+    echo "sspanel_url = ${sspanel_url}"
     echo "---------------------------"
     echo
-    # Set ssrpanel key
+    # Set sspanel key
     echo "sspanel key"
-    read -p "(There is no default value please make sure you input the right thing):" ssrpanel_key
-    [ -z "${ssrpanel_key}" ]
+    read -p "(There is no default value please make sure you input the right thing):" sspanel_key
+    [ -z "${sspanel_key}" ]
     echo
     echo "---------------------------"
-    echo "ssrpanel_key = ${ssrpanel_key}"
+    echo "sspanel_key = ${sspanel_key}"
     echo "---------------------------"
     echo
     else
@@ -264,13 +264,13 @@ pre_install_docker_compose(){
     echo "---------------------------"
     echo
     fi
-    # Set ssrpanel speedtest function
+    # Set sspanel speedtest function
     echo "use sspanel speedtest"
-    read -p "(sspanel speedtest: Default (6) hours every time):" ssrpanel_speedtest
-    [ -z "${ssrpanel_speedtest}" ] && ssrpanel_speedtest=6
+    read -p "(sspanel speedtest: Default (6) hours every time):" sspanel_speedtest
+    [ -z "${sspanel_speedtest}" ] && sspanel_speedtest=6
     echo
     echo "---------------------------"
-    echo "ssrpanel_speedtest = ${ssrpanel_speedtest}"
+    echo "sspanel_speedtest = ${sspanel_speedtest}"
     echo "---------------------------"
     echo
 
@@ -367,29 +367,29 @@ version: '2'
 
 services:
   v2ray:
-    image: xxx/xxx:xxx
+    image: ${docker_addresss}
     restart: always
     network_mode: "host"
     environment:
-      sspanel_url: "https://xxxx"
-      key: "xxxx"
-      speedtest: 6
-      node_id: 10
-      api_port: 2333
-      downWithPanel: 1
-      LDNS: "1.1.1.1"
+      sspanel_url: "${sspanel_url}"
+      key: "${sspanel_key}"
+      speedtest: ${sspanel_speedtest}
+      node_id: ${sspanel_node_id}
+      api_port: ${v2ray_api_port}
+      downWithPanel: ${v2ray_downWithPanel}
+      LDNS: "${LDNS}"
       TZ: "Asia/Shanghai"
-      MYSQLHOST: "https://bing.com"
-      MYSQLDBNAME: "demo_dbname"
-      MYSQLUSR: "demo_user"
-      MYSQLPASSWD: "demo_dbpassword"
-      MYSQLPORT: 3306
-      PANELTYPE: 0
-      usemysql: 0
-      CF_Key: "bbbbbbbbbbbbbbbbbb"
-      CF_Email: "v2rayV3@test.com"
-      MUREGEX: "%5m%id.%suffix"
-      MUSUFFIX: "microsoft.com"
+      MYSQLHOST: ${v2ray_mysqlhost}
+      MYSQLDBNAME: ${v2ray_mysqldbname}
+      MYSQLUSR: ${v2ray_myqluser}
+      MYSQLPASSWD: "${v2ray_mysqlpassword}"
+      MYSQLPORT: ${v2ray_mysqlport}
+      PANELTYPE: ${v2ray_paneltype}
+      usemysql: ${v2ray_usemysql}
+      CF_Key: ${cloudflare_key}
+      CF_Email: ${cloudflare_email}
+      MUREGEX: "${MUREGEX}"
+      MUSUFFIX: "${MUSUFFIX}"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     logging:
@@ -397,25 +397,6 @@ services:
         max-size: "10m"
         max-file: "3"
 EOF
-    sed -i "s|MUREGEX:.*|MUREGEX: \"${MUREGEX}\"|"  ./docker-compose.yml
-    sed -i "s|MUSUFFIX:.*|MUSUFFIX: \"${MUSUFFIX}\"|"  ./docker-compose.yml
-    sed -i "s|xxx/xxx:xxx|${docker_addresss}|"  ./docker-compose.yml
-    sed -i "s|node_id:.*|node_id: ${ssrpanel_node_id}|"  ./docker-compose.yml
-    sed -i "s|sspanel_url:.*|sspanel_url: '${ssrpanel_url}'|"  ./docker-compose.yml
-    sed -i "s|LDNS:.*|LDNS: '${LDNS}'|"  ./docker-compose.yml
-    sed -i "s|key:.*|key: '${ssrpanel_key}'|"  ./docker-compose.yml
-    sed -i "s|speedtest:.*|speedtest: ${ssrpanel_speedtest}|"  ./docker-compose.yml
-    sed -i "s|api_port:.*|api_port: ${v2ray_api_port}|" ./docker-compose.yml
-    sed -i "s|downWithPanel:.*|downWithPanel: ${v2ray_downWithPanel}|" ./docker-compose.yml
-    sed -i "s|usemysql:.*|usemysql: ${v2ray_usemysql}|" ./docker-compose.yml
-    sed -i "s|PANELTYPE:.*|PANELTYPE: ${v2ray_paneltype}|" ./docker-compose.yml
-    sed -i "s|MYSQLHOST:.*|MYSQLHOST: ${v2ray_mysqlhost}|" ./docker-compose.yml
-    sed -i "s|MYSQLPORT:.*|MYSQLPORT: ${v2ray_mysqlport}|" ./docker-compose.yml
-    sed -i "s|MYSQLUSR:.*|MYSQLUSR: ${v2ray_myqluser}|" ./docker-compose.yml
-    sed -i "s|MYSQLPASSWD:.*|MYSQLPASSWD: ${v2ray_mysqlpassword}|" ./docker-compose.yml
-    sed -i "s|MYSQLDBNAME:.*|MYSQLDBNAME: ${v2ray_mysqldbname}|" ./docker-compose.yml
-    sed -i "s|CF_Key:.*|CF_Key: ${cloudflare_key}|" ./docker-compose.yml
-    sed -i "s|CF_Email:.*|CF_Email: ${cloudflare_email}|" ./docker-compose.yml
 }
 
 
@@ -450,30 +431,29 @@ version: '2'
 
 services:
   v2ray:
-    image: xxx/xxx:xxx
+    image: ${docker_addresss}
     restart: always
     network_mode: "host"
     environment:
-      sspanel_url: "https://xxxx"
-      key: "xxxx"
-      docker: "true"
-      speedtest: 6
-      node_id: 10
-      api_port: 2333
-      downWithPanel: 1
-      LDNS: "1.1.1.1"
+      sspanel_url: "${sspanel_url}"
+      key: "${sspanel_key}"
+      speedtest: ${sspanel_speedtest}
+      node_id: ${sspanel_node_id}
+      api_port: ${v2ray_api_port}
+      downWithPanel: ${v2ray_downWithPanel}
+      LDNS: "${LDNS}"
       TZ: "Asia/Shanghai"
-      MYSQLHOST: "https://bing.com"
-      MYSQLDBNAME: "demo_dbname"
-      MYSQLUSR: "demo_user"
-      MYSQLPASSWD: "demo_dbpassword"
-      MYSQLPORT: 3306
-      PANELTYPE: 0
-      usemysql: 0
-      CF_Key: "bbbbbbbbbbbbbbbbbb"
-      CF_Email: "v2rayV3@test.com"
-      MUREGEX: "%5m%id.%suffix"
-      MUSUFFIX: "microsoft.com"
+      MYSQLHOST: ${v2ray_mysqlhost}
+      MYSQLDBNAME: ${v2ray_mysqldbname}
+      MYSQLUSR: ${v2ray_myqluser}
+      MYSQLPASSWD: "${v2ray_mysqlpassword}"
+      MYSQLPORT: ${v2ray_mysqlport}
+      PANELTYPE: ${v2ray_paneltype}
+      usemysql: ${v2ray_usemysql}
+      CF_Key: ${cloudflare_key}
+      CF_Email: ${cloudflare_email}
+      MUREGEX: "${MUREGEX}"
+      MUSUFFIX: "${MUSUFFIX}"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     logging:
@@ -489,40 +469,16 @@ services:
       #      if u want to use cloudflare (for DNS challenge authentication)
       #      - CLOUDFLARE_EMAIL=xxxxxx@out.look.com
       #      - CLOUDFLARE_API_KEY=xxxxxxx
-      - V2RAY_DOMAIN=xxxx.com
-      - V2RAY_PATH=/v2ray
-      - V2RAY_EMAIL=xxxx@outlook.com
-      - V2RAY_PORT=10550
-      - V2RAY_OUTSIDE_PORT=443
+      - V2RAY_DOMAIN=${v2ray_domain}
+      - V2RAY_PATH=${v2ray_path}
+      - V2RAY_EMAIL=${v2ray_email}
+      - V2RAY_PORT=${v2ray_local_port}
+      - V2RAY_OUTSIDE_PORT=${caddy_listen_port}
     network_mode: "host"
     volumes:
       - ./.caddy:/root/.caddy
       - ./Caddyfile:/etc/Caddyfile
 EOF
-    sed -i "s|MUREGEX:.*|MUREGEX: \"${MUREGEX}\"|"  ./docker-compose.yml
-    sed -i "s|MUSUFFIX:.*|MUSUFFIX: \"${MUSUFFIX}\"|"  ./docker-compose.yml
-    sed -i "s|xxx/xxx:xxx|${docker_addresss}|"  ./docker-compose.yml
-    sed -i "s|node_id:.*|node_id: ${ssrpanel_node_id}|"  ./docker-compose.yml
-    sed -i "s|LDNS:.*|LDNS: '${LDNS}'|"  ./docker-compose.yml
-    sed -i "s|sspanel_url:.*|sspanel_url: '${ssrpanel_url}'|"  ./docker-compose.yml
-    sed -i "s|key:.*|key: '${ssrpanel_key}'|"  ./docker-compose.yml
-    sed -i "s|speedtest:.*|speedtest: ${ssrpanel_speedtest}|"  ./docker-compose.yml
-    sed -i "s|api_port:.*|api_port: ${v2ray_api_port}|" ./docker-compose.yml
-    sed -i "s|downWithPanel:.*|downWithPanel: ${v2ray_downWithPanel}|" ./docker-compose.yml
-    sed -i "s|usemysql:.*|usemysql: ${v2ray_usemysql}|" ./docker-compose.yml
-    sed -i "s|PANELTYPE:.*|PANELTYPE: ${v2ray_paneltype}|" ./docker-compose.yml
-    sed -i "s|MYSQLHOST:.*|MYSQLHOST: ${v2ray_mysqlhost}|" ./docker-compose.yml
-    sed -i "s|MYSQLPORT:.*|MYSQLPORT: ${v2ray_mysqlport}|" ./docker-compose.yml
-    sed -i "s|MYSQLUSR:.*|MYSQLUSR: ${v2ray_myqluser}|" ./docker-compose.yml
-    sed -i "s|MYSQLPASSWD:.*|MYSQLPASSWD: ${v2ray_mysqlpassword}|" ./docker-compose.yml
-    sed -i "s|MYSQLDBNAME:.*|MYSQLDBNAME: ${v2ray_mysqldbname}|" ./docker-compose.yml
-    sed -i "s|CF_Key:.*|CF_Key: ${cloudflare_key}|" ./docker-compose.yml
-    sed -i "s|CF_Email:.*|CF_Email: ${cloudflare_email}|" ./docker-compose.yml
-    sed -i "s|V2RAY_DOMAIN=xxxx.com|V2RAY_DOMAIN=${v2ray_domain}|"  ./docker-compose.yml
-    sed -i "s|V2RAY_PATH=/v2ray|V2RAY_PATH=${v2ray_path}|"  ./docker-compose.yml
-    sed -i "s|V2RAY_EMAIL=xxxx@outlook.com|V2RAY_EMAIL=${v2ray_email}|"  ./docker-compose.yml
-    sed -i "s|V2RAY_PORT=10550|V2RAY_PORT=${v2ray_local_port}|"  ./docker-compose.yml
-    sed -i "s|V2RAY_OUTSIDE_PORT=443|V2RAY_OUTSIDE_PORT=${caddy_listen_port}|"  ./docker-compose.yml
 }
 
 # Config caddy_docker
@@ -547,7 +503,7 @@ config_caddy_docker_cloudflare(){
   tls {\$V2RAY_EMAIL} {
     protocols tls1.2 tls1.3
     # remove comment if u want to use cloudflare (for DNS challenge authentication)
-    # dns cloudflare
+    dns cloudflare
   }
   realip cloudflare
 }
@@ -558,30 +514,29 @@ version: '2'
 
 services:
   v2ray:
-    image: xxx/xxx:xxx
+    image: ${docker_addresss}
     restart: always
     network_mode: "host"
     environment:
-      sspanel_url: "https://xxxx"
-      key: "xxxx"
-      docker: "true"
-      speedtest: 6
-      node_id: 10
-      api_port: 2333
-      downWithPanel: 1
-      LDNS: "1.1.1.1"
+      sspanel_url: "${sspanel_url}"
+      key: "${sspanel_key}"
+      speedtest: ${sspanel_speedtest}
+      node_id: ${sspanel_node_id}
+      api_port: ${v2ray_api_port}
+      downWithPanel: ${v2ray_downWithPanel}
+      LDNS: "${LDNS}"
       TZ: "Asia/Shanghai"
-      MYSQLHOST: "https://bing.com"
-      MYSQLDBNAME: "demo_dbname"
-      MYSQLUSR: "demo_user"
-      MYSQLPASSWD: "demo_dbpassword"
-      MYSQLPORT: 3306
-      PANELTYPE: 0
-      usemysql: 0
-      CF_Key: "bbbbbbbbbbbbbbbbbb"
-      CF_Email: "v2rayV3@test.com"
-      MUREGEX: "%5m%id.%suffix"
-      MUSUFFIX: "microsoft.com"
+      MYSQLHOST: ${v2ray_mysqlhost}
+      MYSQLDBNAME: ${v2ray_mysqldbname}
+      MYSQLUSR: ${v2ray_myqluser}
+      MYSQLPASSWD: "${v2ray_mysqlpassword}"
+      MYSQLPORT: ${v2ray_mysqlport}
+      PANELTYPE: ${v2ray_paneltype}
+      usemysql: ${v2ray_usemysql}
+      CF_Key: ${cloudflare_key}
+      CF_Email: ${cloudflare_email}
+      MUREGEX: "${MUREGEX}"
+      MUSUFFIX: "${MUSUFFIX}"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     logging:
@@ -595,45 +550,18 @@ services:
     environment:
       - ACME_AGREE=true
       #      if u want to use cloudflare (for DNS challenge authentication)
-      #      - CLOUDFLARE_EMAIL=xxxxxx@out.look.com
-      #      - CLOUDFLARE_API_KEY=xxxxxxx
-      - V2RAY_DOMAIN=xxxx.com
-      - V2RAY_PATH=/v2ray
-      - V2RAY_EMAIL=xxxx@outlook.com
-      - V2RAY_PORT=10550
-      - V2RAY_OUTSIDE_PORT=443
+      - CLOUDFLARE_EMAIL=${cloudflare_email}
+      - CLOUDFLARE_API_KEY=${cloudflare_key}
+      - V2RAY_DOMAIN=${v2ray_domain}
+      - V2RAY_PATH=${v2ray_path}
+      - V2RAY_EMAIL=${v2ray_email}
+      - V2RAY_PORT=${v2ray_local_port}
+      - V2RAY_OUTSIDE_PORT=${caddy_listen_port}
     network_mode: "host"
     volumes:
       - ./.caddy:/root/.caddy
       - ./Caddyfile:/etc/Caddyfile
 EOF
-    sed -i "s|MUREGEX:.*|MUREGEX: \"${MUREGEX}\"|"  ./docker-compose.yml
-    sed -i "s|MUSUFFIX:.*|MUSUFFIX: \"${MUSUFFIX}\"|"  ./docker-compose.yml
-    sed -i "s|xxx/xxx:xxx|${docker_addresss}|"  ./docker-compose.yml
-    sed -i "s|node_id:.*|node_id: ${ssrpanel_node_id}|"  ./docker-compose.yml
-    sed -i "s|LDNS:.*|LDNS: '${LDNS}'|"  ./docker-compose.yml
-    sed -i "s|sspanel_url:.*|sspanel_url: '${ssrpanel_url}'|"  ./docker-compose.yml
-    sed -i "s|key:.*|key: '${ssrpanel_key}'|"  ./docker-compose.yml
-    sed -i "s|speedtest:.*|speedtest: ${ssrpanel_speedtest}|"  ./docker-compose.yml
-    sed -i "s|api_port:.*|api_port: ${v2ray_api_port}|" ./docker-compose.yml
-    sed -i "s|downWithPanel:.*|downWithPanel: ${v2ray_downWithPanel}|" ./docker-compose.yml
-    sed -i "s|usemysql:.*|usemysql: ${v2ray_usemysql}|" ./docker-compose.yml
-    sed -i "s|PANELTYPE:.*|PANELTYPE: ${v2ray_paneltype}|" ./docker-compose.yml
-    sed -i "s|MYSQLHOST:.*|MYSQLHOST: ${v2ray_mysqlhost}|" ./docker-compose.yml
-    sed -i "s|MYSQLPORT:.*|MYSQLPORT: ${v2ray_mysqlport}|" ./docker-compose.yml
-    sed -i "s|MYSQLUSR:.*|MYSQLUSR: ${v2ray_myqluser}|" ./docker-compose.yml
-    sed -i "s|MYSQLPASSWD:.*|MYSQLPASSWD: ${v2ray_mysqlpassword}|" ./docker-compose.yml
-    sed -i "s|MYSQLDBNAME:.*|MYSQLDBNAME: ${v2ray_mysqldbname}|" ./docker-compose.yml
-    sed -i "s|CF_Key:.*|CF_Key: ${cloudflare_key}|" ./docker-compose.yml
-    sed -i "s|CF_Email:.*|CF_Email: ${cloudflare_email}|" ./docker-compose.yml
-    sed -i "s|V2RAY_DOMAIN=xxxx.com|V2RAY_DOMAIN=${v2ray_domain}|"  ./docker-compose.yml
-    sed -i "s|V2RAY_PATH=/v2ray|V2RAY_PATH=${v2ray_path}|"  ./docker-compose.yml
-    sed -i "s|V2RAY_EMAIL=xxxx@outlook.com|V2RAY_EMAIL=${v2ray_email}|"  ./docker-compose.yml
-    sed -i "s|V2RAY_PORT=10550|V2RAY_PORT=${v2ray_local_port}|"  ./docker-compose.yml
-    sed -i "s|V2RAY_OUTSIDE_PORT=443|V2RAY_OUTSIDE_PORT=${caddy_listen_port}|"  ./docker-compose.yml
-    sed -i "s|      #      - CLOUDFLARE_EMAIL=xxxxxx@out.look.com|      - CLOUDFLARE_EMAIL=${cloudflare_email}|"  ./docker-compose.yml
-    sed -i "s|      #      - CLOUDFLARE_API_KEY=xxxxxxx|      - CLOUDFLARE_API_KEY=${cloudflare_key}|"  ./docker-compose.yml
-    sed -i "s|# dns cloudflare|dns cloudflare|"  ./Caddyfile
 
 }
 
