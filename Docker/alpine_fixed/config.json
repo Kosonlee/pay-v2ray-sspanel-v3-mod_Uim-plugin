@@ -137,6 +137,10 @@
         "type": "none"
       }},
       "tag": "blockedNodeUserLimited"
+    },{
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "block"
     }
   ],
   "policy": {
@@ -176,10 +180,6 @@
           "userlimitedBlocked@rico.xxx"
         ],
         "type": "field"
-      },{
-        "protocol": "blackhole",
-        "settings": {},
-        "tag": "block"
       }
     ],
     "domainStrategy": "AsIs"
