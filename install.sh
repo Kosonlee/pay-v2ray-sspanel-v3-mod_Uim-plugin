@@ -362,7 +362,41 @@ config_docker(){
     echo "install curl"
     install_dependencies
     echo "Writing docker-compose.yml"
-    curl -L https://raw.githubusercontent.com/v2rayv3/pay-v2ray-sspanel-v3-mod_Uim-plugin/master/Docker/V2ray/docker-compose.yml > docker-compose.yml
+    cat>docker-compose.yml<<EOF
+version: '2'
+
+services:
+  v2ray:
+    image: xxx/xxx:xxx
+    restart: always
+    network_mode: "host"
+    environment:
+      sspanel_url: "https://xxxx"
+      key: "xxxx"
+      speedtest: 6
+      node_id: 10
+      api_port: 2333
+      downWithPanel: 1
+      LDNS: "1.1.1.1"
+      TZ: "Asia/Shanghai"
+      MYSQLHOST: "https://bing.com"
+      MYSQLDBNAME: "demo_dbname"
+      MYSQLUSR: "demo_user"
+      MYSQLPASSWD: "demo_dbpassword"
+      MYSQLPORT: 3306
+      PANELTYPE: 0
+      usemysql: 0
+      CF_Key: "bbbbbbbbbbbbbbbbbb"
+      CF_Email: "v2rayV3@test.com"
+      MUREGEX: "%5m%id.%suffix"
+      MUSUFFIX: "microsoft.com"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+EOF
     sed -i "s|MUREGEX:.*|MUREGEX: \"${MUREGEX}\"|"  ./docker-compose.yml
     sed -i "s|MUSUFFIX:.*|MUSUFFIX: \"${MUSUFFIX}\"|"  ./docker-compose.yml
     sed -i "s|xxx/xxx:xxx|${docker_addresss}|"  ./docker-compose.yml
@@ -392,9 +426,79 @@ config_caddy_docker(){
     cd ${cur_dir}
     echo "install curl"
     install_dependencies
-    curl -L https://raw.githubusercontent.com/v2rayv3/pay-v2ray-sspanel-v3-mod_Uim-plugin/master/Docker/Caddy_V2ray/Caddyfile >  Caddyfile
+    cat>Caddyfile<<EOF
+{$V2RAY_DOMAIN}:{$V2RAY_OUTSIDE_PORT}
+{
+  root /srv/www
+  log ./caddy.log
+  proxy {$V2RAY_PATH} 127.0.0.1:{$V2RAY_PORT} {
+    websocket
+    header_upstream -Origin
+  }
+  gzip
+  tls {$V2RAY_EMAIL} {
+    protocols tls1.2 tls1.3
+    # remove comment if u want to use cloudflare (for DNS challenge authentication)
+    # dns cloudflare
+  }
+  realip cloudflare
+}
+EOF
     echo "Writing docker-compose.yml"
-    curl -L https://raw.githubusercontent.com/v2rayv3/pay-v2ray-sspanel-v3-mod_Uim-plugin/master/Docker/Caddy_V2ray/docker-compose.yml > docker-compose.yml
+    cat>docker-compose.yml<<EOF
+version: '2'
+
+services:
+  v2ray:
+    image: xxx/xxx:xxx
+    restart: always
+    network_mode: "host"
+    environment:
+      sspanel_url: "https://xxxx"
+      key: "xxxx"
+      docker: "true"
+      speedtest: 6
+      node_id: 10
+      api_port: 2333
+      downWithPanel: 1
+      LDNS: "1.1.1.1"
+      TZ: "Asia/Shanghai"
+      MYSQLHOST: "https://bing.com"
+      MYSQLDBNAME: "demo_dbname"
+      MYSQLUSR: "demo_user"
+      MYSQLPASSWD: "demo_dbpassword"
+      MYSQLPORT: 3306
+      PANELTYPE: 0
+      usemysql: 0
+      CF_Key: "bbbbbbbbbbbbbbbbbb"
+      CF_Email: "v2rayV3@test.com"
+      MUREGEX: "%5m%id.%suffix"
+      MUSUFFIX: "microsoft.com"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  caddy:
+    image: rico93/v2ray_v3:caddy
+    restart: always
+    environment:
+      - ACME_AGREE=true
+      #      if u want to use cloudflare (for DNS challenge authentication)
+      #      - CLOUDFLARE_EMAIL=xxxxxx@out.look.com
+      #      - CLOUDFLARE_API_KEY=xxxxxxx
+      - V2RAY_DOMAIN=xxxx.com
+      - V2RAY_PATH=/v2ray
+      - V2RAY_EMAIL=xxxx@outlook.com
+      - V2RAY_PORT=10550
+      - V2RAY_OUTSIDE_PORT=443
+    network_mode: "host"
+    volumes:
+      - ./.caddy:/root/.caddy
+      - ./Caddyfile:/etc/Caddyfile
+EOF
     sed -i "s|MUREGEX:.*|MUREGEX: \"${MUREGEX}\"|"  ./docker-compose.yml
     sed -i "s|MUSUFFIX:.*|MUSUFFIX: \"${MUSUFFIX}\"|"  ./docker-compose.yml
     sed -i "s|xxx/xxx:xxx|${docker_addresss}|"  ./docker-compose.yml
@@ -430,9 +534,79 @@ config_caddy_docker_cloudflare(){
     echo "install curl first "
     install_dependencies
     echo "Starting Writing Caddy file and docker-compose.yml"
-    curl -L https://raw.githubusercontent.com/v2rayv3/pay-v2ray-sspanel-v3-mod_Uim-plugin/master/Docker/Caddy_V2ray/Caddyfile >Caddyfile
-    epcho "Writing docker-compose.yml"
-    curl -L https://raw.githubusercontent.com/v2rayv3/pay-v2ray-sspanel-v3-mod_Uim-plugin/master/Docker/Caddy_V2ray/docker-compose.yml >docker-compose.yml
+    cat>Caddyfile<<EOF
+{$V2RAY_DOMAIN}:{$V2RAY_OUTSIDE_PORT}
+{
+  root /srv/www
+  log ./caddy.log
+  proxy {$V2RAY_PATH} 127.0.0.1:{$V2RAY_PORT} {
+    websocket
+    header_upstream -Origin
+  }
+  gzip
+  tls {$V2RAY_EMAIL} {
+    protocols tls1.2 tls1.3
+    # remove comment if u want to use cloudflare (for DNS challenge authentication)
+    # dns cloudflare
+  }
+  realip cloudflare
+}
+EOF
+    echo "Writing docker-compose.yml"
+    cat>docker-compose.yml<<EOF
+version: '2'
+
+services:
+  v2ray:
+    image: xxx/xxx:xxx
+    restart: always
+    network_mode: "host"
+    environment:
+      sspanel_url: "https://xxxx"
+      key: "xxxx"
+      docker: "true"
+      speedtest: 6
+      node_id: 10
+      api_port: 2333
+      downWithPanel: 1
+      LDNS: "1.1.1.1"
+      TZ: "Asia/Shanghai"
+      MYSQLHOST: "https://bing.com"
+      MYSQLDBNAME: "demo_dbname"
+      MYSQLUSR: "demo_user"
+      MYSQLPASSWD: "demo_dbpassword"
+      MYSQLPORT: 3306
+      PANELTYPE: 0
+      usemysql: 0
+      CF_Key: "bbbbbbbbbbbbbbbbbb"
+      CF_Email: "v2rayV3@test.com"
+      MUREGEX: "%5m%id.%suffix"
+      MUSUFFIX: "microsoft.com"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  caddy:
+    image: rico93/v2ray_v3:caddy
+    restart: always
+    environment:
+      - ACME_AGREE=true
+      #      if u want to use cloudflare (for DNS challenge authentication)
+      #      - CLOUDFLARE_EMAIL=xxxxxx@out.look.com
+      #      - CLOUDFLARE_API_KEY=xxxxxxx
+      - V2RAY_DOMAIN=xxxx.com
+      - V2RAY_PATH=/v2ray
+      - V2RAY_EMAIL=xxxx@outlook.com
+      - V2RAY_PORT=10550
+      - V2RAY_OUTSIDE_PORT=443
+    network_mode: "host"
+    volumes:
+      - ./.caddy:/root/.caddy
+      - ./Caddyfile:/etc/Caddyfile
+EOF
     sed -i "s|MUREGEX:.*|MUREGEX: \"${MUREGEX}\"|"  ./docker-compose.yml
     sed -i "s|MUSUFFIX:.*|MUSUFFIX: \"${MUSUFFIX}\"|"  ./docker-compose.yml
     sed -i "s|xxx/xxx:xxx|${docker_addresss}|"  ./docker-compose.yml
